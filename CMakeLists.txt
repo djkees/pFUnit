@@ -25,7 +25,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project (PFUNIT
-  VERSION 4.20.0
+  VERSION 4.20.1
   LANGUAGES Fortran C)
 
 cmake_policy(SET CMP0077 NEW)
@@ -81,14 +81,9 @@ if (MINGW)
   set(SKIP_ROBUST YES)
 endif ()
 
-# gfortran does not predefine the _WIN32 preprocessor macro on any platform
-# (unlike MSVC/Intel), but Fortran sources such as FUnit.F90 use #ifndef
-# _WIN32 guards that need to agree with CMake's own WIN32-gated source
-# exclusions (e.g. src/funit/core/CMakeLists.txt). Define it explicitly so
-# both stay consistent regardless of compiler.
 if (WIN32)
   add_compile_definitions(_WIN32)
-endif ()
+endif()
 
 
 if (NOT SKIP_MPI)
@@ -182,6 +177,8 @@ if (ENABLE_TESTS)
   # are EXCLUDE_FROM_ALL
   # From https://stackoverflow.com/questions/733475/cmake-ctest-make-test-doesnt-build-tests/56448477#56448477
   build_command(CTEST_CUSTOM_PRE_TEST TARGET build-tests)
+  # Ensure forward slashes so Windows paths do not break CTestCustom.cmake syntax with unescaped backslashes
+  string(REPLACE "\\" "/" CTEST_CUSTOM_PRE_TEST "${CTEST_CUSTOM_PRE_TEST}")
   string(CONFIGURE \"@CTEST_CUSTOM_PRE_TEST@\" CTEST_CUSTOM_PRE_TEST_QUOTED ESCAPE_QUOTES)
   file(WRITE "${CMAKE_BINARY_DIR}/CTestCustom.cmake" "set(CTEST_CUSTOM_PRE_TEST ${CTEST_CUSTOM_PRE_TEST_QUOTED})" "\n")
 endif()
