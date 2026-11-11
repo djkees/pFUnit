@@ -1,0 +1,13 @@
+name: DNS Probe
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Resolve archive.ubuntu.com from inside a container
+        run: |
+          docker run --rm ubuntu:24.04 getent hosts archive.ubuntu.com
+          docker run --rm ubuntu:24.04 getent hosts security.ubuntu.com
