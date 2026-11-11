@@ -1,7 +1,8 @@
 name: DNS Probe
 
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   probe:
