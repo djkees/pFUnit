@@ -1,5 +1,5 @@
 set(pfunit_targets pfunit)
-add_library (pfunit)
+add_library (pfunit STATIC)
 add_library (PFUNIT::pfunit ALIAS pfunit)
 if (BUILD_SHARED_LIBS)
   add_library (pfunit_shared SHARED)

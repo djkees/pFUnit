@@ -6,7 +6,7 @@ set (srcs
   ESMF_TestParameter.F90
 )  
 
-add_library (efunit  EXCLUDE_FROM_ALL ${srcs})
+add_library (efunit STATIC EXCLUDE_FROM_ALL ${srcs})
 add_library (PFUNIT::efunit ALIAS efunit)
 set_target_properties (efunit PROPERTIES Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod)
 target_include_directories (efunit PUBLIC

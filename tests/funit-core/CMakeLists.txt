@@ -49,9 +49,9 @@ set(pf_tests
   Test_Long_Subroutine_Name.pf
   Test_ParameterizedAssert.pf)
 
-# Add regex filter tests for non-Windows platforms
+# Add regex tests for non-Windows platforms
 if(NOT WIN32)
-  list(APPEND pf_tests Test_RegexFilter.pf)
+  list(APPEND pf_tests Test_RegexFilter.pf Test_AssertExceptionMatches.pf)
 endif()
 
 set (new_test_srcs)
@@ -137,6 +137,18 @@ add_pfunit_ctest (filter_cmdline_tests.x
   LINK_LIBRARIES other_shared
 )
 add_dependencies(build-tests filter_cmdline_tests.x)
+
+# Verify COMMAND_LINE_ARGS reaches the driver: unfiltered run has 6 tests,
+# --filter on test_alpha_* runs only 2.
+add_pfunit_ctest (extra_args_tests.x
+  TEST_SOURCES FilterCommandLineTests.pf
+  LINK_LIBRARIES other_shared
+  COMMAND_LINE_ARGS --filter FilterCommandLineTests_suite.test_alpha_*
+)
+add_dependencies(build-tests extra_args_tests.x)
+set_tests_properties(extra_args_tests.x PROPERTIES
+  PASS_REGULAR_EXPRESSION "\\(2 tests\\)"
+)
 
 find_program(BASH_PROGRAM NAMES bash)
 
